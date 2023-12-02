@@ -17,7 +17,7 @@ defmodule AdventOfCode.Day02 do
     args
     |> String.split("\n", trim: true)
     |> Enum.map(&parse_row/1)
-    |> Enum.map(&sum_highest_values/1)
+    |> Enum.map(&get_highest_values/1)
     |> Enum.sum()
   end
 
@@ -40,13 +40,11 @@ defmodule AdventOfCode.Day02 do
   end
 
   defp is_valid(map) do
-    map
-    |> Enum.all?(&is_list_valid/1)
+    Enum.all?(map, &is_list_valid/1)
   end
 
   defp is_list_valid({_key, list}) do
-    list
-    |> Enum.all?(&is_entry_valid/1)
+    Enum.all?(list, &is_entry_valid/1)
   end
 
   defp is_entry_valid({colour, count}) do
@@ -58,13 +56,13 @@ defmodule AdventOfCode.Day02 do
     end
   end
 
-  defp sum_highest_values(map) do
+  defp get_highest_values(map) do
     map
     |> Map.to_list()
     |> hd()
     |> elem(1)
-    |> Enum.reduce(%{}, fn {color, val}, acc ->
-      Map.update(acc, color, val, &max(&1, val))
+    |> Enum.reduce(%{}, fn {colour, value}, acc ->
+      Map.update(acc, colour, value, &max(&1, value))
     end)
     |> Map.values()
     |> Enum.reduce(1, &Kernel.*/2)
