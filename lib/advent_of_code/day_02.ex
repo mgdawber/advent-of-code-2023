@@ -31,10 +31,10 @@ defmodule AdventOfCode.Day02 do
     |> Enum.map(&{Enum.at(&1, 0), Enum.at(&1, 1)})
     |> Enum.map(fn {key, value} ->
       {String.to_integer(key),
-        value
-        |> String.split(~r/, /, trim: true)
-        |> Enum.map(&String.split(&1, " "))
-        |> Enum.map(&{Enum.at(&1, 1), String.to_integer(Enum.at(&1, 0))})}
+       value
+       |> String.split(~r/, /, trim: true)
+       |> Enum.map(&String.split(&1, " "))
+       |> Enum.map(&{Enum.at(&1, 1), String.to_integer(Enum.at(&1, 0))})}
     end)
     |> Map.new()
   end
