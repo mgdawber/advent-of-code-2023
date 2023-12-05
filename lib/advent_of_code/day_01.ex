@@ -28,7 +28,7 @@ defmodule AdventOfCode.Day01 do
   end
 
   defp get_row_digits(value) do
-    value 
+    value
     |> String.codepoints()
     |> Enum.filter(&String.match?(&1, ~r/[0-9]/))
   end
@@ -43,7 +43,7 @@ defmodule AdventOfCode.Day01 do
 
       [{start, len}] ->
         value =
-          row 
+          row
           |> String.slice(start, len)
           |> parse_string_value()
 
