@@ -20,18 +20,21 @@ defmodule AdventOfCode.Day03 do
     {result, previous_row} = acc
     [current_row | next_rows] = rows
 
-    matching = Regex.scan(~r/\d+/, current_row, return: :index)
-               |> Enum.filter(fn [{start, count}] ->
-                 offset = count + min(0, start - 1)
+    matching =
+      Regex.scan(~r/\d+/, current_row, return: :index)
+      |> Enum.filter(fn [{start, count}] ->
+        offset = count + min(0, start - 1)
 
-                 top = String.slice(previous_row, max(0, start - 1), offset + 2)
-                 right = String.slice(current_row, start + count, 1)
-                 bottom = String.slice(Enum.at(next_rows, 0) || "", max(0, start - 1), offset + 2)
-                 left = String.slice(current_row, max(0, start - 1), 1 + min(0, start - 1))
-                 Enum.any?([top, right, bottom, left], &contains_symbol?/1)
-               end)
-               |> List.flatten
-               |> Enum.map(fn {start, count} -> String.to_integer(String.slice(current_row, start, count)) end)
+        top = String.slice(previous_row, max(0, start - 1), offset + 2)
+        right = String.slice(current_row, start + count, 1)
+        bottom = String.slice(Enum.at(next_rows, 0) || "", max(0, start - 1), offset + 2)
+        left = String.slice(current_row, max(0, start - 1), 1 + min(0, start - 1))
+        Enum.any?([top, right, bottom, left], &contains_symbol?/1)
+      end)
+      |> List.flatten()
+      |> Enum.map(fn {start, count} ->
+        String.to_integer(String.slice(current_row, start, count))
+      end)
 
     {result ++ matching, current_row}
   end
@@ -40,19 +43,20 @@ defmodule AdventOfCode.Day03 do
     [current_row | next_rows] = rows
     next_row = Enum.at(next_rows, 0) || %{gears: [], numbers: []}
 
-    row_result = current_row[:gears]
-                 |> Enum.map(fn gear ->
-                   [previous_row[:numbers], current_row[:numbers], next_row[:numbers]]
-                   |> List.flatten
-                   |> Enum.reject(&is_nil/1)
-                   |> Enum.filter(fn value -> is_adjacent?(gear, value[:position]) end)
-                 end)
-                 |> Enum.filter(fn list -> length(list) == 2 end)
-                 |> Enum.map(fn [%{value: first_value, position: _}, %{value: second_value, position: _}] ->
-                   String.to_integer(first_value) * String.to_integer(second_value)
-                 end)
-                 |> List.flatten
-                 |> Enum.sum
+    row_result =
+      current_row[:gears]
+      |> Enum.map(fn gear ->
+        [previous_row[:numbers], current_row[:numbers], next_row[:numbers]]
+        |> List.flatten()
+        |> Enum.reject(&is_nil/1)
+        |> Enum.filter(fn value -> is_adjacent?(gear, value[:position]) end)
+      end)
+      |> Enum.filter(fn list -> length(list) == 2 end)
+      |> Enum.map(fn [%{value: first_value, position: _}, %{value: second_value, position: _}] ->
+        String.to_integer(first_value) * String.to_integer(second_value)
+      end)
+      |> List.flatten()
+      |> Enum.sum()
 
     {result + row_result, current_row}
   end
@@ -62,13 +66,15 @@ defmodule AdventOfCode.Day03 do
   end
 
   defp get_gear_positions(row) do
-    Regex.scan(~r/\*/, row, return: :index) |> List.flatten
+    Regex.scan(~r/\*/, row, return: :index) |> List.flatten()
   end
 
   defp get_numbers_positions(row) do
     Regex.scan(~r/\d+/, row, return: :index)
-    |> List.flatten
-    |> Enum.map(fn {start, count} -> %{ position: {start, count}, value: String.slice(row, start, count) } end)
+    |> List.flatten()
+    |> Enum.map(fn {start, count} ->
+      %{position: {start, count}, value: String.slice(row, start, count)}
+    end)
   end
 
   defp sum_result({result, _}) do
