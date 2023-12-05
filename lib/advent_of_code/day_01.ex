@@ -14,26 +14,18 @@ defmodule AdventOfCode.Day01 do
   end
 
   defp get_first_last_digit(value) do
-    digits = get_row_digits(value)
-    first = hd(digits)
-    last = hd(Enum.reverse(digits))
-    String.to_integer(first <> last)
+    String.to_integer(hd(row_digits(value)) <> List.last(row_digits(value)))
   end
 
   defp get_first_last_digit_with_text(value) do
-    digits = get_row_digits_with_text(value)
-    first = hd(digits)
-    last = hd(Enum.reverse(digits))
-    10 * first + last
+    10 * hd(row_digits_text(value)) + List.last(row_digits_text(value))
   end
 
-  defp get_row_digits(value) do
-    value
-    |> String.codepoints()
-    |> Enum.filter(&String.match?(&1, ~r/[0-9]/))
+  defp row_digits(value) do
+    value |> String.codepoints() |> Enum.filter(&String.match?(&1, ~r/[0-9]/))
   end
 
-  defp get_row_digits_with_text(row) do
+  defp row_digits_text(row) do
     regex = ~r/[0-9]|zero|one|two|three|four|five|six|seven|eight|nine/
     regex_run = Regex.run(regex, row, return: :index)
 
@@ -49,7 +41,7 @@ defmodule AdventOfCode.Day01 do
 
         {_, rest} = row |> String.split_at(start + 1)
 
-        [value | get_row_digits_with_text(rest)]
+        [value | row_digits_text(rest)]
     end
   end
 
