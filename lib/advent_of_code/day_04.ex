@@ -4,15 +4,15 @@ defmodule AdventOfCode.Day04 do
     |> parse_cards
     |> Enum.map(&count_matches/1)
     |> Enum.map(&doubled_power_of_two/1)
-    |> Enum.sum
+    |> Enum.sum()
   end
 
   def part2(args) do
     args
     |> parse_cards
     |> count_total_cards
-    |> Map.values
-    |> Enum.sum
+    |> Map.values()
+    |> Enum.sum()
   end
 
   defp parse_cards(cards) do
@@ -20,7 +20,9 @@ defmodule AdventOfCode.Day04 do
     |> String.split("\n", trim: true)
     |> Enum.map(&String.replace(&1, ~r/^Card +/, ""))
     |> Enum.map(&String.split(&1, ": "))
-    |> Enum.map(fn [card_id, numbers] -> [winning, scratch] = String.split(numbers, " | ") 
+    |> Enum.map(fn [card_id, numbers] ->
+      [winning, scratch] = String.split(numbers, " | ")
+
       %{
         card_id: String.to_integer(card_id),
         winning_numbers: parse_number_string(winning),
@@ -31,14 +33,18 @@ defmodule AdventOfCode.Day04 do
 
   defp parse_number_string(str) do
     str
-    |> String.trim
+    |> String.trim()
     |> String.split()
     |> Enum.map(&String.to_integer/1)
   end
 
-  defp count_matches(%{card_id: _card_id, winning_numbers: winning_numbers, scratch_numbers: scratch_numbers }) do
-    scratch_numbers 
-    |> Enum.filter(&(&1 in winning_numbers)) 
+  defp count_matches(%{
+         card_id: _card_id,
+         winning_numbers: winning_numbers,
+         scratch_numbers: scratch_numbers
+       }) do
+    scratch_numbers
+    |> Enum.filter(&(&1 in winning_numbers))
     |> length()
   end
 
