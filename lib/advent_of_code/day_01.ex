@@ -45,15 +45,19 @@ defmodule AdventOfCode.Day01 do
     end
   end
 
-  defp parse_string_value("zero"), do: 0
-  defp parse_string_value("one"), do: 1
-  defp parse_string_value("two"), do: 2
-  defp parse_string_value("three"), do: 3
-  defp parse_string_value("four"), do: 4
-  defp parse_string_value("five"), do: 5
-  defp parse_string_value("six"), do: 6
-  defp parse_string_value("seven"), do: 7
-  defp parse_string_value("eight"), do: 8
-  defp parse_string_value("nine"), do: 9
-  defp parse_string_value(digit), do: String.to_integer(digit)
+  def parse_string_value(value) do
+    case value do
+      "zero" -> 0
+      "one" -> 1
+      "two" -> 2
+      "three" -> 3
+      "four" -> 4
+      "five" -> 5
+      "six" -> 6
+      "seven" -> 7
+      "eight" -> 8
+      "nine" -> 9
+      integer -> String.to_integer(integer)
+    end
+  end
 end

@@ -16,10 +16,7 @@ defmodule AdventOfCode.Day03 do
     |> get_result
   end
 
-  defp get_part_numbers(rows, acc) do
-    {result, previous_row} = acc
-    [current_row | next_rows] = rows
-
+  defp get_part_numbers([current_row | next_rows], {result, previous_row}) do
     matching =
       Regex.scan(~r/\d+/, current_row, return: :index)
       |> Enum.filter(fn [{start, count}] ->
@@ -62,11 +59,10 @@ defmodule AdventOfCode.Day03 do
   end
 
   defp get_positions(row) do
-    %{gears: get_gear_positions(row), numbers: get_numbers_positions(row)}
-  end
-
-  defp get_gear_positions(row) do
-    Regex.scan(~r/\*/, row, return: :index) |> List.flatten()
+    %{
+      gears: Regex.scan(~r/\*/, row, return: :index) |> List.flatten(),
+      numbers: get_numbers_positions(row)
+    }
   end
 
   defp get_numbers_positions(row) do
@@ -77,19 +73,11 @@ defmodule AdventOfCode.Day03 do
     end)
   end
 
-  defp sum_result({result, _}) do
-    Enum.sum(result)
-  end
+  defp sum_result({result, _}), do: Enum.sum(result)
+  defp get_result({result, _}), do: result
 
-  defp get_result({result, _}) do
-    result
-  end
-
-  defp is_adjacent?(gear, number) do
-    {gear_position, _} = gear
-    {start, count} = number
-
-    start - 1 <= gear_position && gear_position <= start + count
+  defp is_adjacent?({pos, _}, {start, count}) do
+    start - 1 <= pos && pos <= start + count
   end
 
   defp contains_symbol?(str) do
